@@ -1,0 +1,10 @@
+# Ignore everything in SHB_Deploy except the .gitkeep file
+SHB_Deploy/*
+!SHB_Deploy/.gitkeep
+
+# Ignore everything in DCWS_Deploy except the .gitkeep file
+DCWS_Deploy/*
+!DCWS_Deploy/.gitkeep
+
+# Ignore the HAT-OFFLINE ISO file
+HAT-OFFLINE-dev20250210.iso
