@@ -1,4 +1,4 @@
-﻿# Ensure running as Administrator
+# Ensure running as Administrator
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     Write-Host "This script must be run as an Administrator!" -ForegroundColor Red
     exit
@@ -32,6 +32,8 @@ function Show-DCWSBanner {
 # Call the function at the beginning of the script
 Show-DCWSBanner
 
+# Open Disk Management 
+diskmgmt.msc
 
 # Set GRUB Install Path to always be in the same directory as the script
 $GrubInstallPath = Join-Path -Path $ScriptDirectory -ChildPath "grub-2.06-for-windows"
@@ -139,13 +141,23 @@ do {
 
 # Clear the disk so we initialize it fresh
 Write-Host "Cleaning Disk $DiskNumber..."
-Clear-Disk -Number $DiskNumber -RemoveData -Confirm:$false
+Clear-Disk -Number $DiskNumber -RemoveData  -Confirm:$false
 
 # Ensure the disk is initialized
 $Disk = Get-Disk -Number $DiskNumber
-if ($Disk.PartitionStyle -eq "RAW") {
-    Write-Host "Disk $DiskNumber is uninitialized. Initializing it as GPT..." -ForegroundColor Yellow
-    Initialize-Disk -Number $DiskNumber -PartitionStyle GPT
+if ($Disk.PartitionStyle -eq "RAW" -or $Disk.PartitionStyle -eq "MBR") 
+{
+    
+    if ($Disk.PartitionStyle -eq "MBR")
+    {
+        Write-Host "Disk $DiskNumber is currently MBR. Converting it to GPT..." -ForegroundColor Yellow
+        Set-Disk -Number $DiskNumber -PartitionStyle GPT  # Convert the disk to GPT
+    } else {
+
+        Write-Host "Disk $DiskNumber is uninitialized. Initializing it as GPT..." -ForegroundColor Yellow
+        Initialize-Disk -Number $DiskNumber -PartitionStyle GPT
+    }
+
     Start-Sleep -Seconds 2  # Initial wait
     
     # Force Windows to refresh disk state
