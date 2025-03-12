@@ -53,6 +53,7 @@ DCWS_Datalocker_Partition_Tool/
 - Simply **copy your files** into:
 - **SHB_Deploy (H:)** → Store **SHB deployment files**.
 - **DCWS_Deploy (I:)** → Store **DCWS deployment files**.
+- Import the HAT ISO into the directory that you will be running the script from. 
 
 ### **Step 2: Run the Partitioning Script**
 1. Insert the **USB drive** into your computer.
